@@ -1,0 +1,6 @@
+archivo = open('prueba.txt', 'w', encoding='utf8')
+archivo.write("r: read - leer\n")
+archivo.write("a: append - anexar\n")
+archive.write("w: write - escribir\n")
+archivo.write("x: crea un archivo\n")
+archivo.write("b: binary - archivos binarios\n")
