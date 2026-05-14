@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reloj</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #050508;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  #reloj {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(5rem, 20vw, 12rem);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #fff;
+    position: relative;
+    z-index: 1;
+    text-shadow:
+      0 0 40px rgba(62, 207, 178, 0.8),
+      0 0 80px rgba(62, 207, 178, 0.4),
+      0 0 120px rgba(62, 207, 178, 0.15);
+    transition: transform 0.1s cubic-bezier(.17,.67,.35,1.5);
+  }
+
+  #reloj.tick { transform: scale(1.018); }
+
+  .colon {
+    display: inline-block;
+    color: #3ecfb2;
+    animation: parpadeo 1s step-end infinite;
+  }
+  @keyframes parpadeo {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.08; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+
+<div id="reloj">--<span class="colon">:</span>--<span class="colon">:</span>--</div>
+
+<script>
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function mkParticles() {
+    particles = Array.from({ length: 80 }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.5 + 0.3,
+      sp: Math.random() * 0.3 + 0.05,
+      op: Math.random()
+    }));
+  }
+
+  function drawBg() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.y -= p.sp;
+      p.op += (Math.random() - 0.5) * 0.02;
+      p.op = Math.max(0.05, Math.min(0.5, p.op));
+      if (p.y < 0) { p.y = H; p.x = Math.random() * W; }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(62,207,178,${p.op})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(drawBg);
+  }
+
+  resize();
+  mkParticles();
+  drawBg();
+  window.addEventListener('resize', () => { resize(); mkParticles(); });
+
+  const el = document.getElementById('reloj');
+
+  let reloj = () => {
+    let fecha = new Date();
+    const h = String(fecha.getHours()).padStart(2, '0');
+    const m = String(fecha.getMinutes()).padStart(2, '0');
+    const s = String(fecha.getSeconds()).padStart(2, '0');
+    el.innerHTML = `${h}<span class="colon">:</span>${m}<span class="colon">:</span>${s}`;
+    el.classList.remove('tick');
+    void el.offsetWidth;
+    el.classList.add('tick');
+    setTimeout(() => el.classList.remove('tick'), 110);
+  };
+
+  reloj();
+  setInterval(reloj, 1000);
+</script>
+
+</body>
+</html>
