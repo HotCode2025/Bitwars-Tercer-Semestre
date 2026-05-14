@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piedra, Papel y Tijera</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="codigo.js"></script>
+
+</head>
+
+<body>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <div class="contenedor">
+
+        <h1>Piedra, Papel y Tijera</h1>
+        <h2>BITWARS</h2>
+
+        <p class="subtitulo">
+            El primero en llegar a 3 victorias gana
+        </p>
+
+        <!-- MARCADOR -->
+        <div class="marcador">
+
+            <!-- PUNTOS JUGADOR -->
+            <div class="caja">
+
+                <h2>Jugador</h2>
+
+                <!-- NUMERO DE PUNTOS -->
+                <span id="puntosJugador">0</span>
+
+            </div>
+
+            <!-- PUNTOS PC -->
+            <div class="caja">
+
+                <h2>PC</h2>
+
+                <!-- NUMERO DE PUNTOS -->
+                <span id="puntosPC">0</span>
+
+            </div>
+
+        </div>
+
+        <!-- BOTON INICIAL -->
+        <button id="botonJugar" onclick="mostrarOpciones()">
+
+            JUGAR
+
+        </button>
+
+        <!-- BOTONES DE OPCIONES -->
+        <div id="opciones" style="display: none;">
+
+            <button onclick="jugar(1)">
+                🪨 Piedra
+            </button>
+
+            <button onclick="jugar(2)">
+                📄 Papel
+            </button>
+
+            <button onclick="jugar(3)">
+                ✂️ Tijera
+            </button>
+
+        </div>
+
+        <!-- RESULTADO -->
+        <div id="resultado">
+
+            ¡Comienza la partida!
+
+        </div>
+
+        <!-- BOTON REINICIAR -->
+        <button id="botonReiniciar"
+                onclick="reiniciarJuego()"
+                style="display: none;">
+
+            Volver a jugar
+
+        </button>
+
+    </div>
+
+</body>
+</html>
