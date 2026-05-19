@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Problema de las N Reinas</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f3ee;
+      --surface: #ffffff;
+      --surface2: #f0ede6;
+      --border: #d4cfc4;
+      --border2: #c0bab0;
+      --text: #1a1816;
+      --text2: #5a5750;
+      --text3: #9a9590;
+      --green: #4e9a51;
+      --green-bg: #edfaed;
+      --green-text: #1e5c20;
+      --yellow: #e6c84a;
+      --yellow-bg: #fffbea;
+      --yellow-text: #7a5c00;
+      --cell-light: #f0ead6;
+      --cell-dark: #b08050;
+      --radius: 8px;
+      --radius-lg: 12px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1a1816; --surface: #242220; --surface2: #2e2c28;
+        --border: #3a3830; --border2: #4a4840;
+        --text: #e8e4dc; --text2: #a0998f; --text3: #60594f;
+        --green-bg: #0a200a; --green-text: #7acc7a;
+        --yellow-bg: #2a2000; --yellow-text: #e6c84a;
+        --cell-light: #3d3220; --cell-dark: #1e1710;
+      }
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg); color: var(--text);
+      min-height: 100vh; padding: 2rem 1rem;
+    }
+
+    .page { max-width: 900px; margin: 0 auto; }
+
+    .header { margin-bottom: 2rem; }
+    .header h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 6px; }
+    .header p  { font-size: 14px; color: var(--text2); line-height: 1.6; max-width: 580px; }
+    .tag {
+      display: inline-block; font-size: 11px; padding: 2px 8px;
+      border-radius: 20px; background: var(--surface2); border: 0.5px solid var(--border);
+      color: var(--text2); margin-right: 6px; margin-bottom: 10px; font-weight: 500;
+    }
+
+    .controls-bar {
+      background: var(--surface); border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg); padding: 16px 20px;
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .ctrl-group { display: flex; align-items: center; gap: 8px; }
+    .ctrl-group label { font-size: 13px; color: var(--text2); white-space: nowrap; }
+    .ctrl-group input[type=range] { width: 110px; accent-color: var(--green); cursor: pointer; }
+    .n-badge { font-size: 20px; font-weight: 600; color: var(--text); min-width: 30px; }
+    .divider { width: 1px; height: 28px; background: var(--border); }
+
+    button {
+      font-family: inherit; font-size: 13px; padding: 7px 18px;
+      border-radius: var(--radius); border: 0.5px solid var(--border2);
+      background: transparent; color: var(--text); cursor: pointer;
+      transition: background .15s, transform .1s; font-weight: 500;
+    }
+    button:hover { background: var(--surface2); }
+    button:active { transform: scale(.97); }
+    button.btn-primary { background: var(--text); color: var(--bg); border-color: transparent; }
+    button.btn-primary:hover { opacity: .85; }
+    button:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+    .status-pill {
+      font-size: 12px; padding: 4px 12px; border-radius: 20px;
+      border: 0.5px solid var(--border); background: var(--surface2);
+      color: var(--text2); font-weight: 500; transition: all .2s; white-space: nowrap;
+    }
+    .status-pill.running { background: var(--yellow-bg); border-color: var(--yellow); color: var(--yellow-text); }
+    .status-pill.done    { background: var(--green-bg);  border-color: var(--green);  color: var(--green-text); }
+
+    .section-label {
+      font-size: 11px; font-weight: 600; letter-spacing: .06em;
+      color: var(--text3); text-transform: uppercase; margin-bottom: 8px;
+    }
+
+    .main-grid {
+      display: grid; grid-template-columns: auto 1fr;
+      gap: 24px; align-items: start; margin-bottom: 1.5rem;
+    }
+    @media (max-width: 620px) { .main-grid { grid-template-columns: 1fr; } }
+
+    .board {
+      display: inline-grid; border: 2px solid var(--border2);
+      border-radius: 6px; overflow: hidden;
+    }
+    .cell { display: flex; align-items: center; justify-content: center; transition: background .15s; }
+    .cell.light { background: var(--cell-light); }
+    .cell.dark  { background: var(--cell-dark); }
+    .cell.queen-ok     { background: #4e9a51 !important; }
+    .cell.queen-attack { background: #c0392b !important; }
+    .queen-icon { font-size: 1em; line-height: 1; user-select: none; filter: drop-shadow(0 1px 1px rgba(0,0,0,.3)); }
+
+    .legend {
+      display: flex; gap: 14px; flex-wrap: wrap;
+      font-size: 12px; color: var(--text2); margin-top: 8px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .legend-dot { width: 11px; height: 11px; border-radius: 3px; flex-shrink: 0; }
+
+    .info-panel { display: flex; flex-direction: column; gap: 14px; }
+
+    .stat-row { display: flex; gap: 10px; }
+    .stat-card {
+      flex: 1; background: var(--surface);
+      border: 0.5px solid var(--border); border-radius: var(--radius); padding: 10px 14px;
+    }
+    .stat-card .slabel { font-size: 11px; color: var(--text3); font-weight: 500; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 4px; }
+    .stat-card .sval   { font-size: 22px; font-weight: 600; color: var(--text); }
+    .stat-card .ssub   { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+    .array-card {
+      background: var(--surface); border: 0.5px solid var(--border);
+      border-radius: var(--radius); padding: 14px 16px;
+    }
+    .array-card h3 {
+      font-size: 11px; font-weight: 600; letter-spacing: .06em;
+      color: var(--text3); text-transform: uppercase; margin-bottom: 6px;
+    }
+    .array-desc { font-size: 12px; color: var(--text2); margin-bottom: 10px; line-height: 1.5; }
+    .array-row { display: flex; gap: 5px; flex-wrap: wrap; }
+    .arr-cell { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .arr-idx { font-size: 10px; color: var(--text3); font-weight: 500; }
+    .arr-val {
+      width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 600; border-radius: 5px;
+      background: var(--surface2); border: 0.5px solid var(--border);
+      color: var(--text3); transition: background .2s, color .2s;
+    }
+    .arr-val.filled { background: var(--green); color: #fff; border-color: #3a7a3d; }
+
+    .solutions-section { margin-top: .5rem; }
+    .solutions-section h2 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .solutions-section p  { font-size: 13px; color: var(--text2); margin-bottom: 12px; }
+    .solutions-scroll {
+      display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; padding-top: 2px;
+    }
+    .sol-wrap { flex-shrink: 0; text-align: center; cursor: pointer; }
+    .mini-board {
+      display: inline-grid; border: 1.5px solid var(--border2);
+      border-radius: 4px; overflow: hidden; transition: border-color .15s, transform .15s;
+    }
+    .sol-wrap:hover .mini-board { border-color: var(--green); transform: scale(1.06); }
+    .sol-wrap.active .mini-board { border-color: var(--green); box-shadow: 0 0 0 2px rgba(78,154,81,.35); }
+    .mini-cell { display: flex; align-items: center; justify-content: center; }
+    .mini-cell.light { background: var(--cell-light); }
+    .mini-cell.dark  { background: var(--cell-dark); }
+    .mini-cell.q     { background: var(--green) !important; color: #fff; }
+    .sol-num { font-size: 10px; color: var(--text3); margin-top: 4px; font-weight: 500; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <span class="tag">Backtracking</span>
+    <span class="tag">JavaScript</span>
+    <h1>Problema de las N Reinas</h1>
+    <p>Colocar N reinas en un tablero N×N de modo que ninguna se ataque entre sí — resuelto con el algoritmo de <strong>backtracking</strong>.</p>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls-bar">
+    <div class="ctrl-group">
+      <label>4 — Valor de N:</label>
+      <input type="range" id="nSlider" min="8" max="12" value="8" oninput="onNChange(this.value)">
+      <span class="n-badge" id="nDisplay">8</span>
+    </div>
+    <div class="divider"></div>
+    <div class="ctrl-group">
+      <label>Velocidad:</label>
+      <input type="range" id="speedSlider" min="1" max="5" value="3" style="width:90px">
+    </div>
+    <div class="divider"></div>
+    <button class="btn-primary" id="startBtn" onclick="startSolving()">▶ Resolver</button>
+    <button id="resetBtn" onclick="resetAll()">Reiniciar</button>
+    <span class="status-pill" id="statusPill">En espera</span>
+  </div>
+
+  <div class="main-grid">
+    <!-- 1. Tablero en progreso -->
+    <div>
+      <div class="section-label">1 — Tablero en progreso</div>
+      <div class="board" id="liveBoard"></div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#4e9a51"></div> Reina ubicada</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#c0392b"></div> Conflicto</div>
+      </div>
+    </div>
+
+    <div class="info-panel">
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="slabel">Pasos</div>
+          <div class="sval" id="stepCount">0</div>
+          <div class="ssub">iteraciones</div>
+        </div>
+        <div class="stat-card">
+          <div class="slabel">Reinas</div>
+          <div class="sval" id="queensPlaced">0/<span id="nTotal">8</span></div>
+          <div class="ssub">colocadas</div>
+        </div>
+        <div class="stat-card">
+          <div class="slabel">Soluciones</div>
+          <div class="sval" id="solCount">0</div>
+          <div class="ssub" id="solSub">encontradas</div>
+        </div>
+      </div>
+
+      <!-- 3. Arreglo de índices -->
+      <div class="array-card">
+        <h3>3 — Arreglo de índices queens[]</h3>
+        <div class="array-desc">
+          Cada índice = <strong>fila</strong>. El valor = <strong>columna</strong> de la reina. El símbolo <strong>·</strong> indica fila vacía.
+        </div>
+        <div class="array-row" id="arrayRow"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Tableros terminados -->
+  <div class="solutions-section" id="solutionsSection" style="display:none">
+    <div class="section-label">2 — Tableros terminados</div>
+    <h2>Todas las soluciones encontradas</h2>
+    <p>Hacé clic en cualquier tablero para verlo ampliado arriba.</p>
+    <div class="solutions-scroll" id="solutionsScroll"></div>
+  </div>
+
+</div>
+
+<script>
+let N = 8, animTimer = null, steps = [], stepIdx = 0;
+let solutions = [], solCountShown = 0, running = false;
+const knownCounts = {1:1,4:2,5:10,6:4,7:40,8:92,9:352,10:724,11:2680,12:14200};
+
+function onNChange(v) { N = parseInt(v); document.getElementById('nDisplay').textContent = N; resetAll(); }
+
+function resetAll() {
+  running = false; clearTimeout(animTimer);
+  stepIdx = 0; steps = []; solutions = []; solCountShown = 0;
+  document.getElementById('stepCount').textContent = '0';
+  document.getElementById('queensPlaced').innerHTML = '0/<span id="nTotal">'+N+'</span>';
+  document.getElementById('solCount').textContent = '0';
+  document.getElementById('solSub').textContent = 'encontradas';
+  document.getElementById('solutionsSection').style.display = 'none';
+  document.getElementById('solutionsScroll').innerHTML = '';
+  document.getElementById('startBtn').textContent = '▶ Resolver';
+  document.getElementById('startBtn').disabled = false;
+  setStatus('waiting');
+  buildLiveBoard(new Array(N).fill(-1));
+  buildArrayRow(new Array(N).fill(-1));
+}
+
+function setStatus(s) {
+  const el = document.getElementById('statusPill');
+  el.className = 'status-pill'+(s==='running'?' running':s==='done'?' done':'');
+  el.textContent = s==='running'?'⟳ Ejecutando...':s==='done'?'✓ Completado':'◉ En espera';
+}
+
+function buildLiveBoard(queens) {
+  const board = document.getElementById('liveBoard');
+  const sz = Math.min(46, Math.floor(340/N));
+  board.style.gridTemplateColumns = `repeat(${N}, ${sz}px)`;
+  board.innerHTML = '';
+  const attacked = getAttacked(queens);
+  for (let r=0;r<N;r++) for (let c=0;c<N;c++) {
+    const cell = document.createElement('div');
+    cell.className = 'cell '+((r+c)%2===0?'light':'dark');
+    cell.style.width = cell.style.height = sz+'px';
+    cell.style.fontSize = (sz*0.62)+'px';
+    if (queens[r]===c) {
+      cell.classList.add(attacked.has(r*N+c)?'queen-attack':'queen-ok');
+      cell.innerHTML = '<span class="queen-icon">♛</span>';
+    }
+    board.appendChild(cell);
+  }
+}
+
+function getAttacked(queens) {
+  const set = new Set();
+  const placed = queens.map((c,r)=>({r,c})).filter(x=>x.c>=0);
+  for (let i=0;i<placed.length;i++) for (let j=i+1;j<placed.length;j++) {
+    const a=placed[i],b=placed[j];
+    if (a.c===b.c||Math.abs(a.r-b.r)===Math.abs(a.c-b.c)) { set.add(a.r*N+a.c); set.add(b.r*N+b.c); }
+  }
+  return set;
+}
+
+function buildArrayRow(queens) {
+  const row = document.getElementById('arrayRow');
+  row.innerHTML = '';
+  for (let i=0;i<N;i++) {
+    const wrap=document.createElement('div'); wrap.className='arr-cell';
+    const idx=document.createElement('div'); idx.className='arr-idx'; idx.textContent='f'+i;
+    const val=document.createElement('div');
+    val.className='arr-val '+(queens[i]>=0?'filled':'');
+    val.textContent=queens[i]>=0?queens[i]:'·';
+    wrap.appendChild(idx); wrap.appendChild(val); row.appendChild(wrap);
+  }
+}
+
+function buildMiniBoard(sol, idx) {
+  const sz = Math.max(10, Math.min(16, Math.floor(100/N)));
+  const wrap=document.createElement('div'); wrap.className='sol-wrap';
+  const board=document.createElement('div'); board.className='mini-board';
+  board.style.gridTemplateColumns=`repeat(${N}, ${sz}px)`;
+  for (let r=0;r<N;r++) for (let c=0;c<N;c++) {
+    const cell=document.createElement('div');
+    cell.className='mini-cell '+((r+c)%2===0?'light':'dark');
+    cell.style.width=cell.style.height=sz+'px';
+    cell.style.fontSize=(sz*0.75)+'px';
+    if (sol[r]===c) { cell.classList.add('q'); cell.textContent='♛'; }
+    board.appendChild(cell);
+  }
+  const label=document.createElement('div'); label.className='sol-num'; label.textContent='#'+(idx+1);
+  wrap.appendChild(board); wrap.appendChild(label);
+  wrap.addEventListener('click',()=>{
+    document.querySelectorAll('.sol-wrap').forEach(w=>w.classList.remove('active'));
+    wrap.classList.add('active');
+    buildLiveBoard(sol); buildArrayRow(sol);
+  });
+  return wrap;
+}
+
+function generateSteps() {
+  const allSteps=[], sols=[], board=new Array(N).fill(-1);
+  function isSafe(row,col) {
+    for (let r=0;r<row;r++) {
+      if (board[r]===col) return false;
+      if (Math.abs(board[r]-col)===Math.abs(r-row)) return false;
+    }
+    return true;
+  }
+  function solve(row) {
+    if (row===N) { sols.push([...board]); allSteps.push({queens:[...board],type:'solution',row}); return; }
+    for (let col=0;col<N;col++) {
+      if (isSafe(row,col)) {
+        board[row]=col; allSteps.push({queens:[...board],type:'place',row,col});
+        solve(row+1);
+        board[row]=-1; allSteps.push({queens:[...board],type:'backtrack',row});
+      }
+    }
+  }
+  solve(0);
+  return {allSteps, sols};
+}
+
+function startSolving() {
+  if (running) return;
+  running=true; setStatus('running');
+  document.getElementById('startBtn').disabled=true;
+  document.getElementById('startBtn').textContent='⟳ Resolviendo...';
+  const {allSteps,sols}=generateSteps();
+  steps=allSteps; solutions=sols;
+  const total=knownCounts[N]||sols.length;
+  document.getElementById('solSub').textContent='de '+total+' totales';
+  stepIdx=0; solCountShown=0;
+  runStep();
+}
+
+function getDelay() { return {1:400,2:140,3:55,4:18,5:1}[parseInt(document.getElementById('speedSlider').value)]||55; }
+
+function runStep() {
+  if (stepIdx>=steps.length) {
+    running=false; setStatus('done');
+    document.getElementById('startBtn').textContent='✓ Listo';
+    document.getElementById('solutionsSection').style.display='';
+    return;
+  }
+  const step=steps[stepIdx++];
+  const placed=step.queens.filter(v=>v>=0).length;
+  document.getElementById('stepCount').textContent=stepIdx;
+  document.getElementById('queensPlaced').innerHTML=placed+'/<span id="nTotal">'+N+'</span>';
+  buildLiveBoard(step.queens); buildArrayRow(step.queens);
+  if (step.type==='solution') {
+    solCountShown++;
+    document.getElementById('solCount').textContent=solCountShown;
+    document.getElementById('solutionsSection').style.display='';
+    document.getElementById('solutionsScroll').appendChild(buildMiniBoard(step.queens,solCountShown-1));
+  }
+  animTimer=setTimeout(runStep,getDelay());
+}
+
+resetAll();
+</script>
+</body>
+</html>
