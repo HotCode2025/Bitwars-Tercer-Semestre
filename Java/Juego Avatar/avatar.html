@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LA LEYENDA DE AANG: AVATAR</title>
+</head>
+<body>
+    <h1>AVATAR 🔥💧🌱🌪️</h1> <!--Esto es estatico, No cambia, el h1 se utuliza una sola vez -->
+
+    <section id="seleccionar-personaje">
+        <h2>Elige tu personaje</h2>
+
+        <label for="zuko">Zuko</label>   <!-- Esta etiqueta es para darle un indicador a los usuarios de que estan seleccionando -->
+        <input type="radio" name="personaje" id="zuko"/>   <!-- name es para agrupar todos los imputs y poder seleccionar  -->
+
+        <label for="katara">Katara</label>   <!--El atributo for ayuda a vincular un label con un imput a traves del mismo id   -->
+        <input type="radio" name="personaje" id="katara"/> <!-- Aca van los personajes -->
+
+        <label for="aang">Aang</label>
+        <input type="radio" name="personaje" id="aang"/>  <!-- Le damos un atributo id para saber cual es el valor de cada uno -->
+
+        <label for="toph">Toph</label>
+        <input type="radio" name="personaje" id="toph">
+
+        <button id="boton-personaje">Seleccionar</button>       <!-- Boton para seleccionar los personajes -->
+    </section>
+
+    <section id="seleccionar-ataque">
+        <h2>Elige tu ataque</h2>    <!-- Se puede utilizar varias veces -->
+        <p>Tu personaje <span id="personaje-jugador"></span> tiene<span> 3</span> vidas</p>   <!-- Pero esto debe ser dinamico, necesitamos que cambie -->
+        <p>El personaje <span id="personaje-enemigo"></span> del enemigo tiene <span>3</span> vidas</p>    <!--Con la etiqueta spam vamos a modificar el 3 con JS -->
+        <p>
+            <button id="boton-fuego">Fuego 🔥</button>
+            <button id="boton-agua">Agua 💧</button>
+            <button id="boton-tierra">Tierra 🌱</button>
+            <button id="boton-aire">Aire 🌪️</button>
+        </p>
+    </section>
+
+    <section id="mensajes">    <!--Sera un parrafo dinamico  -->
+        <p>Tu personaje atacó con todo el poder del FUEGO, el personaje enemigo atacó con el medio poder de la TIERRA - GANASTE</p>
+    </section>
+
+    <section id="reiniciar">
+        <button id="boton-reiniciar">Reiniciar</button>
+    </section>
+    <script src="./js/avatar.js"></script>
+</body>
+</html>
