@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Torres de Hanoi</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>Torres de Hanoi</h1>
+
+  <div class="controles">
+    <label>Cantidad de discos:</label>
+    <input type="number" id="cantidadDiscos" min="1" max="7" value="3">
+
+    <button onclick="iniciarJuego()">Iniciar</button>
+    <button onclick="resolverHanoi()">Resolver</button>
+  </div>
+
+  <p id="movimiento">Presioná iniciar para comenzar</p>
+
+  <div class="tablero">
+    <div class="poste" id="A">
+      <div class="palo"></div>
+      <h2>A</h2>
+    </div>
+
+    <div class="poste" id="B">
+      <div class="palo"></div>
+      <h2>B</h2>
+    </div>
+
+    <div class="poste" id="C">
+      <div class="palo"></div>
+      <h2>C</h2>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

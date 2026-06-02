@@ -1,0 +1,81 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background: #f1f5f9;
+}
+
+h1 {
+  color: #1e293b;
+}
+
+.controles {
+  margin: 20px;
+}
+
+input, button {
+  padding: 10px;
+  margin: 5px;
+  font-size: 16px;
+}
+
+button {
+  cursor: pointer;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+#movimiento {
+  font-size: 20px;
+  font-weight: bold;
+  color: #334155;
+}
+
+.tablero {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  margin-top: 40px;
+}
+
+.poste {
+  width: 220px;
+  height: 320px;
+  border-bottom: 10px solid #475569;
+  position: relative;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+}
+
+.palo {
+  width: 12px;
+  height: 230px;
+  background: #334155;
+  position: absolute;
+  bottom: 0;
+  z-index: 0;
+}
+
+.poste h2 {
+  position: absolute;
+  bottom: -55px;
+  color: #1e293b;
+}
+
+.disco {
+  height: 28px;
+  border-radius: 10px;
+  margin-bottom: 4px;
+  z-index: 1;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
