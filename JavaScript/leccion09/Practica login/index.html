@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+
+  <title>Web Viva</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <section>
+    <div class="color"></div>
+    <div class="color"></div>
+    <div class="color"></div>
+
+    <div class="box">
+
+      <!-- Caja original del ejemplo -->
+      <div class="square" style="--i:0"></div>
+
+      <!-- TAREA FINAL DEL PROFE:
+      Agregamos 4 cuadrados más con movimiento alrededor del login -->
+      <div class="square" style="--i:1"></div>
+      <div class="square" style="--i:2"></div>
+      <div class="square" style="--i:3"></div>
+      <div class="square" style="--i:4"></div>
+
+      <div class="container">
+        <div class="form">
+          <h2>Login Form</h2>
+
+          <form id="loginForm">
+            <div class="inputBox">
+              <input type="text" id="usuario" placeholder="Username">
+            </div>
+
+            <div class="inputBox">
+              <input type="password" id="password" placeholder="Password">
+            </div>
+
+            <div class="inputBox">
+              <input type="submit" value="Login">
+            </div>
+
+            <!-- Mensaje que se muestra con JavaScript -->
+            <p id="mensaje"></p>
+
+            <p class="forget">Forgot password ?
+              <a href="">Click Here</a>
+            </p>
+
+            <p class="forget">Don't have an account ?
+              <a href="">Sign Up</a>
+            </p>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="./codigo.js"></script>
+</body>
+</html>
