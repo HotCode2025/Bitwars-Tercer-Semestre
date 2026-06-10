@@ -1,4 +1,6 @@
 from logger_base import log
+from persona import Persona
+from conexion import Conexion
 
 class PersonaDAO:
     """
