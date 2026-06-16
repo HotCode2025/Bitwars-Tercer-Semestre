@@ -1,0 +1,4 @@
+# name == version (ej: polars==1.32)
+polars==
+psycopg2==
+tkinter== 
