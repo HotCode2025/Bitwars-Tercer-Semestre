@@ -1,4 +1,4 @@
 # name == version (ej: polars==1.32)
-polars==
-psycopg2==
-tkinter== 
+polars==1.41.2
+psycopg2==2.9.12
+customtkinter==5.2.2
