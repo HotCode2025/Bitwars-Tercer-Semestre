@@ -65,13 +65,6 @@ appointment-management-system/
 │   │   ├── csv_exporter.py
 │   │   └── csv_importer.py
 │   │
-│   ├── models/
-│   │   ├── cliente.py
-│   │   ├── proveedor.py
-│   │   ├── servicio.py
-│   │   ├── turno.py
-│   │   └── pago.py
-│   │
 │   ├── repositories/
 │   │   ├── clientes.py
 │   │   ├── proveedores.py
@@ -250,8 +243,6 @@ Cada pago está asociado a un turno específico.
 | 1       | 1        | 15000 | PAGADO |
 
 ---
-
-
 
 ### Ejecutar aplicación
 
