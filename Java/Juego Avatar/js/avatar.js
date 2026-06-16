@@ -1,9 +1,15 @@
 let ataqueJugador
 let ataqueEnemigo
+let vidasJugador = 3
+let vidasEnemigo = 3
 
 function iniciarJuego(){
+    let sectionSeleccionarAtaque = document.getElementById('seleccionar-ataque')
+    sectionSeleccionarAtaque.style.display = 'none'
     let botonPersonajeJugador = document.getElementById('boton-personaje')
     botonPersonajeJugador.addEventListener('click', seleccionarPersonajeJugador)
+    let sectionReiniciar = document.getElementById('boton-reiniciar')
+    sectionReiniciar.style.display = "none"
 
     let botonPunio = document.getElementById('boton-punio')
     botonPunio.addEventListener('click', ataquePunio)
@@ -16,6 +22,9 @@ function iniciarJuego(){
 
     let botonReglas = document.getElementById('reglasdejuego')
     botonReglas.addEventListener('click', mostrarOcultarReglas)
+    //creamos una variable
+    let botonReiniciar = document.getElementById('boton-reiniciar')
+    botonReiniciar.addEventListener('click', reiniciarJuego)
 }
 
 function seleccionarPersonajeJugador(){
@@ -24,6 +33,11 @@ function seleccionarPersonajeJugador(){
     let inputAang = document.getElementById('aang')
     let inputToph = document.getElementById('toph')
     let spanPersonajeJugador = document.getElementById('personaje-jugador')
+
+    let sectionSeleccionarAtaque = document.getElementById('seleccionar-ataque')
+    sectionSeleccionarAtaque.style.display = 'block'
+    let sectionSeleccionarPersonaje = document.getElementById('seleccionar-personaje')
+    sectionSeleccionarPersonaje.style.display = 'none'
 
     if(inputZuko.checked){
         spanPersonajeJugador.innerHTML = 'Zuko'
@@ -35,7 +49,9 @@ function seleccionarPersonajeJugador(){
         spanPersonajeJugador.innerHTML = 'Toph'
     }else{
         alert('Selecciona a un personaje')
+        reiniciarJuego()
         return
+        
     }
 
     seleccionarPersonajeEnemigo()
@@ -86,17 +102,60 @@ function ataqueAleatorioEnemigo(){
 }
 
 function combate(){
+    let spanVidasJugador = document.getElementById('vidas-jugador')
+    let spanVidasEnemigo = document.getElementById('vidas-enemigo')
     if (ataqueEnemigo == ataqueJugador) {
         crearMensaje("🤝 EMPATE")
     } else if (ataqueJugador == 'Puño' && ataqueEnemigo == 'Barrida') {
         crearMensaje("🎉 GANASTE")
+        vidasEnemigo--
+        spanVidasEnemigo.innerHTML = vidasEnemigo
     } else if (ataqueJugador == 'Patada' && ataqueEnemigo == 'Puño') {
         crearMensaje("🎉 GANASTE")
+        vidasEnemigo--
+        spanVidasEnemigo.innerHTML = vidasEnemigo
     } else if (ataqueJugador == 'Barrida' && ataqueEnemigo == 'Patada') {
         crearMensaje("🎉 GANASTE")
+        vidasEnemigo--
+        spanVidasEnemigo.innerHTML = vidasEnemigo
     } else {
         crearMensaje("💀 PERDISTE")
+        vidasJugador--
+        spanVidasJugador.innerHTML = vidasJugador
     }
+    //Revisar vidas
+    revisarVidas()
+}
+
+function revisarVidas(){
+    if(vidasEnemigo == 0){
+        //Ganamos
+        crearMensajeFinal("FELICIDADES HAS GANADO!!!")
+    }else if(vidasJugador == 0){
+        //Perdimos
+        crearMensajeFinal("QUE PENA HAS PERDIDO!!!")
+    }
+}
+
+function crearMensajeFinal(resultado){
+    let sectionReiniciar = document.getElementById('boton-reiniciar')
+    sectionReiniciar.style.display = "block"
+
+    let sectionMensaje = document.getElementById('mensajes')
+    let parrafo = document.createElement('p')
+
+    parrafo.innerHTML = resultado
+ 
+    sectionMensaje.appendChild(parrafo)
+
+    let botonPunio = document.getElementById('boton-punio')
+    botonPunio.disabled = true
+
+    let botonPatada = document.getElementById('boton-patada')
+    botonPatada.disabled = true
+
+    let botonBarrida = document.getElementById('boton-barrida')
+    botonBarrida.disabled = true
 }
 
 function crearMensaje(resultado){
@@ -119,6 +178,10 @@ function mostrarOcultarReglas(){
         seccionReglas.style.display = 'none'
         botonReglas.innerHTML = '📖 Ver reglas'
     }
+}
+
+function reiniciarJuego(){
+    location.reload()
 }
 
 function aleatorio(min, max){
