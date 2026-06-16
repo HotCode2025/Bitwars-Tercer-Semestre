@@ -34,7 +34,7 @@ Para nuestra aplicación, creamos un sistema de gestión de turnos, orientado a 
 - **PostgreSQL:** Base de datos relacional para almacenar las tablas necesarias.
 - **Psycopg2:** Librería de Python para trabajar con PostgreSQL.
 - **Polars:** Librería de Python para manejo de dataframes, utilizada para exportar turnos en formato .csv o .xlsx (Excel).
-- **Tkinter:** Librería de Python para creación de interfaces, utilizada para la interfaz de usuario de la aplicación.
+- **CustomTkinter:** Librería de Python para creación de interfaces, utilizada para la interfaz de usuario de la aplicación.
 
 #### Estructura del proyecto
 
