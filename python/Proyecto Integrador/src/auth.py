@@ -5,6 +5,21 @@ from repositories.usuarios import (
     crear_usuario
 )
 
+def validar_password(password):
+    """
+    Validar que la contraseña tenga al menos 8 caracteres,
+    una mayúscula y un carácter especial.
+    """
+
+    tiene_longitud = len(password) >= 8
+    tiene_mayuscula = any(caracter.isupper() for caracter in password)
+    tiene_especial = any(not caracter.isalnum() for caracter in password)
+
+    return (
+        tiene_longitud
+        and tiene_mayuscula
+        and tiene_especial
+    )
 
 def hashear_password(password):
     """
@@ -26,10 +41,6 @@ def verificar_password(password, password_hash):
         password.encode(),
         password_hash.encode()
     )
-
-
-def validar_password(password):
-    return len(password >= 8)
 
 
 def autenticar_usuario(email, password):

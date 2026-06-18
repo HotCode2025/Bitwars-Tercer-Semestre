@@ -114,24 +114,36 @@ appointment-management-system/
 
 # Estructura de la Base de Datos
 
-## Tabla: `clientes`
+## Tabla: `usuarios`
 
-Almacena la información de las personas que solicitan turnos.
+Almacena la información de las personas que utilizan el sistema para reservar turnos.
+
+Un usuario puede tener el rol de `CLIENTE` o `ADMIN`.
 
 ### Campos
 
-| Campo          | Descripción                      |
-| -------------- | --------------------------------- |
-| `id_cliente` | Identificador único del cliente. |
-| `nombre`     | Nombre completo del cliente.      |
-| `telefono`   | Número de teléfono de contacto. |
-| `email`      | Correo electrónico del cliente.  |
+| Campo | Descripción |
+|-------|-------------|
+| `id_usuario` | Identificador único del usuario. |
+| `nombre` | Nombre completo del usuario. |
+| `telefono` | Número de teléfono de contacto. |
+| `email` | Correo electrónico del usuario. |
+| `password_hash` | Contraseña almacenada de forma segura mediante hashing. |
+| `rol` | Rol del usuario dentro del sistema. |
+| `fecha_creacion` | Fecha de creación de la cuenta. |
+
+### Roles posibles
+
+| Rol | Descripción |
+|-----|-------------|
+| `CLIENTE` | Puede reservar y administrar sus propios turnos. |
+| `ADMIN` | Puede administrar proveedores, servicios, turnos y pagos. |
 
 ### Ejemplo
 
-| id_cliente | nombre      | telefono   | email                                |
-| ---------- | ----------- | ---------- | ------------------------------------ |
-| 1          | Juan Pérez | 2611234567 | [juan@email.com](mailto:juan@email.com) |
+| id_usuario | nombre | telefono | email | rol |
+|------------|--------|----------|-------|-----|
+| 1 | Juan Pérez | 2611234567 | juan@email.com | CLIENTE |
 
 ---
 
@@ -141,19 +153,19 @@ Almacena la información de los profesionales o prestadores de servicios que ati
 
 ### Campos
 
-| Campo            | Descripción                        |
-| ---------------- | ----------------------------------- |
+| Campo | Descripción |
+|-------|-------------|
 | `id_proveedor` | Identificador único del proveedor. |
-| `nombre`       | Nombre completo del proveedor.      |
-| `telefono`     | Número de teléfono de contacto.   |
-| `email`        | Correo electrónico del proveedor.  |
+| `nombre` | Nombre completo del proveedor. |
+| `telefono` | Número de teléfono de contacto. |
+| `email` | Correo electrónico del proveedor. |
 
 ### Ejemplo
 
-| `id_proveedor` | `nombre`        |
-| ---------------- | ----------------- |
-| 1                | Dr. Carlos Gómez |
-| 2                | Sofía Martínez  |
+| `id_proveedor` | `nombre` |
+|----------------|----------|
+| 1 | Dr. Carlos Gómez |
+| 2 | Sofía Martínez |
 
 ---
 
@@ -163,56 +175,56 @@ Define los servicios que pueden reservarse dentro del sistema.
 
 ### Campos
 
-| Campo                | Descripción                                |
-| -------------------- | ------------------------------------------- |
-| `id_servicio`      | Identificador único del servicio.          |
-| `nombre_servicio`  | Nombre del servicio ofrecido.               |
+| Campo | Descripción |
+|-------|-------------|
+| `id_servicio` | Identificador único del servicio. |
+| `nombre_servicio` | Nombre del servicio ofrecido. |
 | `duracion_minutos` | Duración estimada del servicio en minutos. |
-| `precio`           | Precio del servicio.                        |
+| `precio` | Precio del servicio. |
 
 ### Ejemplo
 
 | `id_servicio` | `nombre_servicio` | `duracion_minutos` | `precio` |
-| --------------- | ------------------- | -------------------- | ---------- |
-| 1               | Consulta Inicial    | 60                   | 15000      |
-| 2               | Corte de Pelo       | 30                   | 8000       |
+|---------------|-------------------|--------------------|----------|
+| 1 | Consulta Inicial | 60 | 15000 |
+| 2 | Corte de Pelo | 30 | 8000 |
 
 ---
 
 ## Tabla: `turnos`
 
-Representa cada reserva realizada por un cliente.
+Representa cada reserva realizada por un usuario.
 
-Relaciona un cliente, un proveedor y un servicio en una fecha y hora determinadas.
+Relaciona un usuario, un proveedor y un servicio en una fecha y hora determinadas.
 
 ### Campos
 
-| Campo              | Descripción                            |
-| ------------------ | --------------------------------------- |
-| `id_turno`       | Identificador único del turno.         |
-| `id_cliente`     | Cliente que reserva el turno.           |
-| `id_proveedor`   | Profesional que brindará el servicio.  |
-| `id_servicio`    | Servicio solicitado.                    |
-| `fecha_turno`    | Fecha y hora programadas para el turno. |
-| `estado`         | Estado actual del turno.                |
-| `notas`          | Observaciones adicionales.              |
-| `fecha_creacion` | Fecha de creación del registro.        |
+| Campo | Descripción |
+|-------|-------------|
+| `id_turno` | Identificador único del turno. |
+| `id_usuario` | Usuario que reserva el turno. |
+| `id_proveedor` | Profesional que brindará el servicio. |
+| `id_servicio` | Servicio solicitado. |
+| `fecha_turno` | Fecha y hora programadas para el turno. |
+| `estado` | Estado actual del turno. |
+| `notas` | Observaciones adicionales. |
+| `fecha_creacion` | Fecha de creación del registro. |
 
 ### Estados posibles
 
-| Estado         | Descripción                          |
-| -------------- | ------------------------------------- |
-| `PENDIENTE`  | Turno creado pero aún no confirmado. |
-| `CONFIRMADO` | Turno confirmado.                     |
-| `COMPLETADO` | Servicio realizado exitosamente.      |
-| `CANCELADO`  | Turno cancelado.                      |
-| `NO_ASISTIO` | El cliente no se presentó.           |
+| Estado | Descripción |
+|--------|-------------|
+| `PENDIENTE` | Turno creado pero aún no confirmado. |
+| `CONFIRMADO` | Turno confirmado. |
+| `COMPLETADO` | Servicio realizado exitosamente. |
+| `CANCELADO` | Turno cancelado. |
+| `NO_ASISTIO` | El usuario no se presentó al turno. |
 
 ### Ejemplo
 
-| `id_turno` | `cliente` | `proveedor` | `servicio`     | `fecha`        |
-| ------------ | ----------- | ------------- | ---------------- | ---------------- |
-| 1            | Juan Pérez | Carlos Gómez | Consulta Inicial | 2026-06-20 15:30 |
+| `id_turno` | `usuario` | `proveedor` | `servicio` | `fecha` |
+|------------|-----------|-------------|-------------|---------|
+| 1 | Juan Pérez | Carlos Gómez | Consulta Inicial | 2026-06-20 15:30 |
 
 ---
 
@@ -224,23 +236,23 @@ Cada pago está asociado a un turno específico.
 
 ### Campos
 
-| Campo              | Descripción                      |
-| ------------------ | --------------------------------- |
-| `id_pago`        | Identificador único del pago.    |
-| `id_turno`       | Turno asociado al pago.           |
-| `monto`          | Importe abonado.                  |
-| `metodo_pago`    | Método utilizado para pagar.     |
-| `estado`         | Estado actual del pago.           |
-| `fecha_pago`     | Fecha en que se realizó el pago. |
-| `fecha_creacion` | Fecha de creación del registro.  |
+| Campo | Descripción |
+|-------|-------------|
+| `id_pago` | Identificador único del pago. |
+| `id_turno` | Turno asociado al pago. |
+| `monto` | Importe abonado. |
+| `metodo_pago` | Método utilizado para pagar. |
+| `estado` | Estado actual del pago. |
+| `fecha_pago` | Fecha en que se realizó el pago. |
+| `fecha_creacion` | Fecha de creación del registro. |
 
 ### Estados posibles
 
-| Estado          | Descripción              |
-| --------------- | ------------------------- |
-| `PENDIENTE`   | Pago aún no realizado.   |
-| `PAGADO`      | Pago completado.          |
-| `REEMBOLSADO` | Pago devuelto al cliente. |
+| Estado | Descripción |
+|--------|-------------|
+| `PENDIENTE` | Pago aún no realizado. |
+| `PAGADO` | Pago completado. |
+| `REEMBOLSADO` | Pago devuelto al usuario. |
 
 ### Métodos de pago posibles
 
@@ -252,8 +264,8 @@ Cada pago está asociado a un turno específico.
 ### Ejemplo
 
 | `id_pago` | `id_turno` | `monto` | `estado` |
-| ----------- | ------------ | --------- | ---------- |
-| 1           | 1            | 15000     | PAGADO     |
+|-----------|------------|---------|----------|
+| 1 | 1 | 15000 | PAGADO |
 
 ---
 
