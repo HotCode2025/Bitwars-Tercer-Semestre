@@ -1,27 +1,23 @@
 import os
 import psycopg2
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
-
 def obtener_conexion():
     """
-    Crea y devuelve una conexión a PostgreSQL.
+    Crea y devuelve una conexion a PostgreSQL.
     """
 
     try:
         conexion = psycopg2.connect(
-            host=os.getenv("DB_HOST"),
-            port=os.getenv("DB_PORT"),
-            database=os.getenv("DB_NAME"),
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASSWORD")
+            host="localhost",
+            port="5433",
+            database="sistema_turnos",
+            user="postgres",
+            password="elefantito"
         )
 
         return conexion
 
     except psycopg2.Error as error:
-        print(f"Error al conectar con PostgreSQL: {error}")
-        raise
+        raise ConnectionError(
+            f"No fue posible conectar con PostgreSQL: {error}"
+        )

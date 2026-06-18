@@ -13,7 +13,7 @@ def configurar_logger():
         format="%(asctime)s | %(levelname)s | %(message)s",
         handlers=[
             logging.FileHandler(
-                "logs/app.log",
+                "logs/app.log", # Archivo donde se guardarán los logs de la aplicación
                 encoding="utf-8"
             ),
             logging.StreamHandler()

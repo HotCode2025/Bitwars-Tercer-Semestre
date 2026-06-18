@@ -93,6 +93,19 @@ appointment-management-system/
 └── diagrama_entidad_relacion.png
 ```
 
+- **data:** Carpeta para guardar imports y exports de archivos csv, excel y PDF
+- **logs:** Carpeta para guardar los logs de la aplicación
+- **sql:** Scripts SQL
+- **src:** Código fuente de la aplicación
+- **assets:** Elementos (imágenes, íconos) de la interfaz
+- **config:** Configuración de la aplicación y la base de datos
+- **repositories:** Objetos que interactúan con la base de datos
+- **ui:** Interfaz de la aplicación
+
+---
+
+
+
 #### Diagrama Entidad-Relación
 
 ![img](diagrama_entidad_relacion.png "Diagrama Entidad Relación")
@@ -137,10 +150,10 @@ Almacena la información de los profesionales o prestadores de servicios que ati
 
 ### Ejemplo
 
-| id_proveedor | nombre            |
-| ------------ | ----------------- |
-| 1            | Dr. Carlos Gómez |
-| 2            | Sofía Martínez  |
+| `id_proveedor` | `nombre`        |
+| ---------------- | ----------------- |
+| 1                | Dr. Carlos Gómez |
+| 2                | Sofía Martínez  |
 
 ---
 
@@ -159,10 +172,10 @@ Define los servicios que pueden reservarse dentro del sistema.
 
 ### Ejemplo
 
-| id_servicio | nombre_servicio  | duracion_minutos | precio |
-| ----------- | ---------------- | ---------------- | ------ |
-| 1           | Consulta Inicial | 60               | 15000  |
-| 2           | Corte de Pelo    | 30               | 8000   |
+| `id_servicio` | `nombre_servicio` | `duracion_minutos` | `precio` |
+| --------------- | ------------------- | -------------------- | ---------- |
+| 1               | Consulta Inicial    | 60                   | 15000      |
+| 2               | Corte de Pelo       | 30                   | 8000       |
 
 ---
 
@@ -197,9 +210,9 @@ Relaciona un cliente, un proveedor y un servicio en una fecha y hora determinada
 
 ### Ejemplo
 
-| id_turno | cliente     | proveedor     | servicio         | fecha            |
-| -------- | ----------- | ------------- | ---------------- | ---------------- |
-| 1        | Juan Pérez | Carlos Gómez | Consulta Inicial | 2026-06-20 15:30 |
+| `id_turno` | `cliente` | `proveedor` | `servicio`     | `fecha`        |
+| ------------ | ----------- | ------------- | ---------------- | ---------------- |
+| 1            | Juan Pérez | Carlos Gómez | Consulta Inicial | 2026-06-20 15:30 |
 
 ---
 
@@ -238,9 +251,9 @@ Cada pago está asociado a un turno específico.
 
 ### Ejemplo
 
-| id_pago | id_turno | monto | estado |
-| ------- | -------- | ----- | ------ |
-| 1       | 1        | 15000 | PAGADO |
+| `id_pago` | `id_turno` | `monto` | `estado` |
+| ----------- | ------------ | --------- | ---------- |
+| 1           | 1            | 15000     | PAGADO     |
 
 ---
 
