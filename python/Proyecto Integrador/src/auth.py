@@ -71,12 +71,17 @@ def registrar_usuario(
     Registrar un nuevo usuario almacenando su contraseña hasheada.
     """
 
-    password_hash = hashear_password(password) # Hashear contraseña
+    if not validar_password(password):
+        raise ValueError(
+            "La contraseña debe tener al menos 8 caracteres, una mayúscula y un carácter especial."
+        )
+
+    password_hash = hashear_password(password)
 
     crear_usuario(
         nombre,
         telefono,
         email,
-        password_hash, # Guarda la contraseña hasheada
+        password_hash,
         rol
     )
