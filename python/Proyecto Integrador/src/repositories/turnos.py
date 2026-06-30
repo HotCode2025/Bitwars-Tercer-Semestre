@@ -16,7 +16,7 @@ def crear_turno(
                 """
                 INSERT INTO turnos
                 (
-                    id_cliente,
+                    id_usuario,
                     id_proveedor,
                     id_servicio,
                     fecha_turno,
@@ -57,7 +57,7 @@ def actualizar_turno(
                 """
                 UPDATE turnos
                 SET
-                    id_cliente = %s,
+                    id_usuario = %s,
                     id_proveedor = %s,
                     id_servicio = %s,
                     fecha_turno = %s,
@@ -85,6 +85,25 @@ def obtener_turnos():
                 """
                 SELECT *
                 FROM turnos
+                ORDER BY fecha_turno
+                """
+            )
+
+            return cursor.fetchall()
+
+
+# ---- Obtener turnos disponibles (sin cliente asignado, usados por rol CLIENTE) ----
+def obtener_turnos_disponibles():
+
+    with obtener_conexion() as conn:
+        with conn.cursor() as cursor:
+
+            cursor.execute(
+                """
+                SELECT *
+                FROM turnos
+                WHERE estado = 'PENDIENTE'
+                AND id_usuario IS NULL
                 ORDER BY fecha_turno
                 """
             )
@@ -120,7 +139,7 @@ def obtener_turnos_por_cliente(id_cliente):
                 """
                 SELECT *
                 FROM turnos
-                WHERE id_cliente = %s
+                WHERE id_usuario = %s
                 ORDER BY fecha_turno
                 """,
                 (id_cliente,)
@@ -187,6 +206,37 @@ def actualizar_estado_turno(
                     id_turno
                 )
             )
+
+
+# ---- Reservar turno (usado por rol CLIENTE) ----
+def reservar_turno(id_turno, id_usuario):
+    """
+    Asigna un turno PENDIENTE (disponible, sin cliente asignado) al
+    cliente que lo reserva, y lo pasa a estado CONFIRMADO.
+    Solo afecta turnos que sigan disponibles (evita reservas duplicadas
+    por carrera entre dos clientes).
+    """
+
+    with obtener_conexion() as conn:
+        with conn.cursor() as cursor:
+
+            cursor.execute(
+                """
+                UPDATE turnos
+                SET
+                    id_usuario = %s,
+                    estado = 'CONFIRMADO'
+                WHERE id_turno = %s
+                AND estado = 'PENDIENTE'
+                AND id_usuario IS NULL
+                """,
+                (
+                    id_usuario,
+                    id_turno
+                )
+            )
+
+            return cursor.rowcount > 0
 
 
 # ---- Eliminar turno ----
