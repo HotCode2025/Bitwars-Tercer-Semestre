@@ -35,7 +35,7 @@ CREATE TABLE servicios (
 
 CREATE TABLE turnos (
     id_turno SERIAL PRIMARY KEY,
-    id_usuario INTEGER NOT NULL,
+    id_usuario INTEGER,
     id_proveedor INTEGER NOT NULL,
     id_servicio INTEGER NOT NULL,
     fecha_turno TIMESTAMP NOT NULL,
